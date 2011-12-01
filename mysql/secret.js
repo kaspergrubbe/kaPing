@@ -1,9 +1,9 @@
-var mysqlhost = 'localhost',
+var mysqlhost = 'rauw.dk',
 	mysqluser = 'root',
 	mysqlpass = '',
 	mysqldb   = 'kaping';
 
-exports.mysqlroot = mysqlroot;
+exports.mysqlhost = mysqlhost;
 exports.mysqluser = mysqluser;
 exports.mysqlpass = mysqlpass;
 exports.mysqldb = mysqldb;
