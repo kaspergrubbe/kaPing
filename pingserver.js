@@ -2,14 +2,16 @@ var cp = require('child_process');
 
 var mysql = require('./mysql/secret');
 
-var mysql = require('mysql');
-var client = mysql.createClient({
+var mysqlclient = require('mysql');
+var client = mysqlclient.createClient({
+  host: mysql.mysqlhost,
   user: mysql.mysqluser,
   password: mysql.mysqlpass,
   database: mysql.mysqldb,
 });
 
 console.log("connecting...");
+fetchHosts(client);
 
 // Todo, we need a "hook" for when we are connected
 /*client.connect(function(err, results) {
