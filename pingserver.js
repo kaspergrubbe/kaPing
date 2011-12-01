@@ -13,16 +13,6 @@ var client = mysqlclient.createClient({
 console.log("connecting...");
 fetchHosts(client);
 
-// Todo, we need a "hook" for when we are connected
-/*client.connect(function(err, results) {
-    if (err) {
-        console.log("ERROR: " + err.message);
-        throw err;
-    }
-    console.log("And we're live!");
-	fetchHosts(client)
-});*/
-
 function fetchHosts(client)
 {
 	client.query(
