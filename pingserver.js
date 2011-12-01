@@ -3,9 +3,11 @@ var cp = require('child_process');
 var Client = require('mysql').Client;
 var client = new Client();
 
-client.user 	= 'root';
-client.password = '';
-client.database = 'kaping';
+var mysql = require('./mysql/secret');
+
+client.user 	= mysql.mysqluser;
+client.password = mysql.mysqlpass;
+client.database = mysql.mysqldb;
 console.log("connecting...");
 
 client.connect(function(err, results) {
