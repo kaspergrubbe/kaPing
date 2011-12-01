@@ -5,7 +5,7 @@ var client = new Client();
 
 client.user 	= 'root';
 client.password = '';
-client.database = '';
+client.database = 'kaping';
 console.log("connecting...");
 
 client.connect(function(err, results) {
@@ -34,16 +34,6 @@ function fetchHosts(client)
 		client.end();
 	  }
 	);
-}
-
-function savePings()
-{
-	
-}
-
-function updateHosts()
-{
-	
 }
 
 // Ping-request
@@ -76,30 +66,6 @@ function ping(host,num){
 			}
 		}
 	);
-}
-
-/*
- * Not used!
- */
-function clearping(error, stdout, stderr){
-	if(error){
-		return;
-	}
-	
-	var packets = stdout.match(/(\d+)\spackets/);
-	var received = stdout.match(/(\d+)\sreceived/);
-	var packetloss = stdout.match(/(\d+)%/);
-	stdout = stdout.split('rtt min/avg/max/mdev = ');
-	stdout = stdout[1].replace(' ms\n','');
-	var pingio_stats = stdout.split('/');
-		
-	return new Array(packets[1], 
-					 received[1], 
-					 packetloss[1], 
-					 pingio_stats[0], 
-					 pingio_stats[1], 
-					 pingio_stats[2], 
-					 pingio_stats[3]);
 }
 
 setInterval(function () {
