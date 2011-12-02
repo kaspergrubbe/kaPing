@@ -11,6 +11,9 @@ var client = mysqlclient.createClient({
 
 function fetchHosts(servers)
 {
+	// clear the array, we will fetch the new ones ourselves again
+	servers = new Array();
+	
 	client.query(
 	  'SELECT * FROM pinghosts',
 	  function selectCb(err, results, fields) {
