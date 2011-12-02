@@ -70,7 +70,7 @@ setInterval(function () {
 	}, 1000*15);
 	
 setInterval(function () {
-		console.log("Servers:\t {" + servers.length + " " + servers + "}");
+		console.log("Servers:\t {" + servers + "}");
 		console.log("Pings:\t\t" + pings.length);
 	}, 1000*60);
 
