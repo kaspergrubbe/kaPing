@@ -27,7 +27,6 @@ function fetchHosts(client)
 			servers.push(value.url);
 		}
 		console.log("URLs: " + servers);
-		client.end();
 	  }
 	);
 }
