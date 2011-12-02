@@ -1,35 +1,11 @@
 var cp = require('child_process');
+var mysqlstore = require('./mysql/mysqlstore');
 
-var mysql = require('./mysql/secret');
-
-var mysqlclient = require('mysql');
-var client = mysqlclient.createClient({
-  host: mysql.mysqlhost,
-  user: mysql.mysqluser,
-  password: mysql.mysqlpass,
-  database: mysql.mysqldb,
-});
+var servers = new Array();
+var pings = new Array();
 
 console.log("connecting...");
-fetchHosts(client);
-
-function fetchHosts(client)
-{
-	client.query(
-	  'SELECT * FROM pinghosts',
-	  function selectCb(err, results, fields) {
-		if (err) {
-		  throw err;
-		}
-	
-		for(var i=0; i<results.length; i++) {
-			var value = results[i];
-			servers.push(value.url);
-		}
-		console.log("URLs: " + servers);
-	  }
-	);
-}
+mysqlstore.fetchHosts(servers);
 
 // Ping-request
 function pingreq(siteurl,datetime,packets,received,loss,min,avg,max,mdev){
@@ -50,9 +26,9 @@ function ping(host,num){
 			var received = stdout.match(/(\d+)\sreceived/);
 			var packetloss = stdout.match(/(\d+)%/);
 
-			console.log("Hit " + host + " with " + packets[1] + " packets " + (error ? "timeout" : ""));
+			//console.log("Hit " + host + " with " + packets[1] + " packets " + (error ? "timeout" : ""));
 			if(error){
-				console.log("Timeouts: " + packets + ", " + received + ", " + packetloss);
+				//console.log("Timeouts: " + packets + ", " + received + ", " + packetloss);
 			}else{
 				stdout = stdout.split('rtt min/avg/max/mdev = ');
 				stdout = stdout[1].replace(' ms\n','');
@@ -63,16 +39,15 @@ function ping(host,num){
 	);
 }
 
+// Every 15 seconds, initiate pinging
 setInterval(function () {
 		for(var i=0; i<servers.length; i++) {
 			ping(servers[i],3);
 		}
 	}, 1000*15);
-	
+
+// Every minute give us stats
 setInterval(function () {
 		console.log("Servers:\t {" + servers + "}");
 		console.log("Pings:\t\t" + pings.length);
 	}, 1000*60);
-
-var servers = new Array();
-var pings = new Array();
