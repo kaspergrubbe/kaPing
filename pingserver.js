@@ -1,24 +1,9 @@
 var cp = require('child_process');
 var mysqlstore = require('./mysql/mysqlstore');
 
-var servers = new Array();
-var pings = new Array();
-
 console.log("connecting...");
-mysqlstore.fetchHosts(servers);
 
-// Ping-request
-function pingreq(siteurl,datetime,packets,received,loss,min,avg,max,mdev){
-    this.siteurl=siteurl;
-    this.datetime=datetime;
-    this.packets=packets;
-	this.received=received;
-	this.loss=loss;
-	this.min=min;
-	this.avg=avg;
-	this.max=max;
-	this.mdev=mdev;
-}
+var servers = mysqlstore.fetchHosts();
 
 function ping(host,num){
 	cp.exec("ping -c "+num+" -W 30 "+host, function (error, stdout, stderr){
@@ -33,7 +18,7 @@ function ping(host,num){
 				stdout = stdout.split('rtt min/avg/max/mdev = ');
 				stdout = stdout[1].replace(' ms\n','');
 				var pingio_stats = stdout.split('/');
-				pings.push(new pingreq(host,new Date(),packets[1],received[1],packetloss[1],pingio_stats[0],pingio_stats[1],pingio_stats[2],pingio_stats[3]));
+				mysqlstore.addPing(host,new Date(),packets[1],received[1],packetloss[1],pingio_stats[0],pingio_stats[1],pingio_stats[2],pingio_stats[3]);
 			}
 		}
 	);
@@ -49,5 +34,16 @@ setInterval(function () {
 // Every minute give us stats
 setInterval(function () {
 		console.log("Servers:\t {" + servers + "}");
-		console.log("Pings:\t\t" + pings.length);
+		console.log("Pings:\t\t" + mysqlstore.getPings());
 	}, 1000*60);
+	
+// Every 10 minutes throw the pingstats into our datastore!
+setInterval(function () {
+		mysqlstore.savePings();
+	}, 1000*60*10);
+	
+// Every 1 hour, re-fetch the hosts. Somebody could have added hosts to the db
+// Every 10 minutes throw the pingstats into our datastore!
+setInterval(function () {
+		mysqlstore.fetchHosts(servers);
+	}, 1000*60*5);
