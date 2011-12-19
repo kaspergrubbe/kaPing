@@ -1,1 +1,25 @@
 This is a node.js project that pings different specified hosts, in an attempt to find out about host uptime and network over time
+
+This software will probably not work under other versions of "PING" as it relies to the error codes given by the Ubuntu version.
+
+The MySQL tables are as follows:
+
+CREATE TABLE IF NOT EXISTS `pinghosts` (
+  `id` int(11) NOT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `pings` (
+  `host` varchar(255) NOT NULL,
+  `date` datetime DEFAULT NULL,
+  `sent` int(11) DEFAULT NULL,
+  `received` int(11) DEFAULT NULL,
+  `loss` int(11) DEFAULT NULL,
+  `min` float DEFAULT NULL,
+  `avg` float DEFAULT NULL,
+  `max` float DEFAULT NULL,
+  `mdev` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+TODO: Should add a index and a relation back to pinghosts from ping.
