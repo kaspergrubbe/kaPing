@@ -6,7 +6,7 @@ var modulename = 'PING';
 
 console.log("["+modulename+"] " + "Connecting to datastore...");
 
-var servers = datastore.fetchHosts();
+var servers = datastore.fetchPingHosts();
 
 function ping(host,num){
 	cp.exec("ping -c "+num+" -W 30 "+host, function (error, stdout, stderr){
@@ -46,5 +46,5 @@ setInterval(function () {
 // Every 1 hour, re-fetch the hosts. Somebody could have added hosts to the db
 setInterval(function () {
 	console.log("["+modulename+"] " + 'fetching new hosts');
-	datastore.fetchHosts(servers);
+	servers = datastore.fetchPingHosts();
 }, 1000*60*60);
