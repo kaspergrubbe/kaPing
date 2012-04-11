@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `pinghosts` (
   `id` int(11) NOT NULL,
   `url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `pings` (
   `host` varchar(255) NOT NULL,
@@ -20,9 +20,22 @@ CREATE TABLE IF NOT EXISTS `pings` (
   `avg` float DEFAULT NULL,
   `max` float DEFAULT NULL,
   `mdev` float DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-TODO: Should add a index and a relation back to pinghosts from ping.
+CREATE TABLE IF NOT EXISTS `urlhosts` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `url` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=`InnoDB` DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `urlrequests` (
+  `url` varchar(255) NOT NULL,
+  `datetime` datetime NOT NULL,
+  `statuscode` int(11) NOT NULL,
+  `errortext` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+TODO: Should add a indexes and relations 
 
 == Testing Ping return ==
 
