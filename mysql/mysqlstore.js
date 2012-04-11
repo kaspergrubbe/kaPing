@@ -26,7 +26,7 @@ function pingreq(siteurl,datetime,packets,received,loss,min,avg,max,mdev){
 }
 
 function urlreq(url,datetime,statuscode,errortext) {
-  this.url=siteurl;
+  this.url=url;
   this.datetime=datetime;
   this.statuscode=statuscode;
   this.errortext=errortext;
