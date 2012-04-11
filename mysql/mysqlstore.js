@@ -1,20 +1,20 @@
 var mysqlclient = require('mysql');
 
-var pings = new Array();
+var pings = [];
 
 var mysql = require('./secret');
 var client = mysqlclient.createClient({
   host: mysql.mysqlhost,
   user: mysql.mysqluser,
   password: mysql.mysqlpass,
-  database: mysql.mysqldb,
+  database: mysql.mysqldb
 });
 
 // Ping-request
 function pingreq(siteurl,datetime,packets,received,loss,min,avg,max,mdev){
-    this.siteurl=siteurl;
-    this.datetime=datetime;
-    this.packets=packets;
+	this.siteurl=siteurl;
+	this.datetime=datetime;
+	this.packets=packets;
 	this.received=received;
 	this.loss=loss;
 	this.min=min;
@@ -25,13 +25,13 @@ function pingreq(siteurl,datetime,packets,received,loss,min,avg,max,mdev){
 
 function fetchHosts(){
 	// clear the array, we will fetch the new ones ourselves again
-	servers = new Array();
+	servers = [];
 	
 	client.query(
-	  'SELECT * FROM pinghosts',
-	  function selectCb(err, results, fields) {
+		'SELECT * FROM pinghosts',
+		function selectCb(err, results, fields) {
 		if (err) {
-		  throw err;
+			throw err;
 		}
 	
 		for(var i=0; i<results.length; i++) {
@@ -39,7 +39,7 @@ function fetchHosts(){
 			servers.push(value.url);
 		}
 		console.log("URLs re-loaded: " + servers);
-	  }
+	}
 	);
 	return servers;
 }
@@ -50,14 +50,14 @@ function addPing(siteurl,datetime,packets,received,loss,min,avg,max,mdev){
 
 function savePings() {
 	for (var ping in pings) {
-		var ping = pings[ping];
+		var p = pings[ping];
 		client.query(
-		  'INSERT INTO pings '+
-		  'SET host = ?, date = ?, sent = ?, received = ?, loss = ?, min = ?, avg = ?, max = ?, mdev = ?',
-		  [ping.siteurl, ping.datetime, ping.packets, ping.received, ping.loss, ping.min, ping.avg, ping.max, ping.mdev]
+			'INSERT INTO pings '+
+			'SET host = ?, date = ?, sent = ?, received = ?, loss = ?, min = ?, avg = ?, max = ?, mdev = ?',
+			[p.siteurl, p.datetime, p.packets, p.received, p.loss, p.min, p.avg, p.max, p.mdev]
 		);
 	}
-	pings = new Array();
+	pings = [];
 }
 
 function getPings()
