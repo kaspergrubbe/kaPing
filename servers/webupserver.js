@@ -21,8 +21,6 @@ function makehttprequest(host){
   });
 }
 
-
-
 // Every 15 seconds, initiate fetching
 setInterval(function () {
   for(var i=0; i<urls.length; i++) {
