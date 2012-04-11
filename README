@@ -23,3 +23,29 @@ CREATE TABLE IF NOT EXISTS `pings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 TODO: Should add a index and a relation back to pinghosts from ping.
+
+== Testing Ping return ==
+
+Ping lol.dk
+Output (OSX Lion):
+"--- lol.dk ping statistics ---
+3 packets transmitted, 3 packets received, 0.0% packet loss, 3 packets out of wait time
+round-trip min/avg/max/stddev = 109.832/109.856/109.886/0.022 ms"
+
+(With no answer, server is blocking us):
+--- amino.dk ping statistics ---
+3 packets transmitted, 0 packets received, 100.0% packet loss
+
+
+== Testing curl -i return ==
+
+Output (OSX Lion):
+"curl -I http://allinthehead.com/
+HTTP/1.1 200 OK
+Date: Wed, 11 Apr 2012 13:16:34 GMT
+Server: Apache
+X-Cache: asy_jpcache v2 - file
+ETag: "jpd-1069839312.35461"
+Vary: Cookie,Accept-Encoding
+Content-Length: 35461
+Content-Type: text/html; charset=utf-8"

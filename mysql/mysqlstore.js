@@ -1,6 +1,8 @@
 var mysqlclient = require('mysql');
+var modulename = 'MYSQLSTORE';
 
 var pings = [];
+var urlreqs = [];
 
 var mysql = require('./secret');
 var client = mysqlclient.createClient({
@@ -12,21 +14,26 @@ var client = mysqlclient.createClient({
 
 // Ping-request
 function pingreq(siteurl,datetime,packets,received,loss,min,avg,max,mdev){
-	this.siteurl=siteurl;
-	this.datetime=datetime;
-	this.packets=packets;
-	this.received=received;
-	this.loss=loss;
-	this.min=min;
-	this.avg=avg;
-	this.max=max;
-	this.mdev=mdev;
+  this.siteurl=siteurl;
+  this.datetime=datetime;
+  this.packets=packets;
+  this.received=received;
+  this.loss=loss;
+  this.min=min;
+  this.avg=avg;
+  this.max=max;
+  this.mdev=mdev;
 }
 
-function fetchHosts(){
-	// clear the array, we will fetch the new ones ourselves again
-	servers = [];
-	
+function urlreq(url,datetime,statuscode,errortext) {
+  this.url=siteurl;
+  this.datetime=datetime;
+  this.statuscode=statuscode;
+  this.errortext=errortext;
+}
+
+// -------------- PING RELATED
+function fetchPingHosts(){
 	client.query(
 		'SELECT * FROM pinghosts',
 		function selectCb(err, results, fields) {
@@ -65,7 +72,30 @@ function getPings()
 	return pings.length;
 }
 
-exports.fetchHosts = fetchHosts;
+// -------------- URL RELATED
+function fetchUrlHosts() {
+  // clear the array, we will fetch the new ones ourselves again
+  urls = ['http://woman.dk','http://THISADDRESSDOESNOTEXISTSATALLASKDAJSDAKJSD.com','http://woman.dk/deliberate404error'];
+  return urls;
+}
+function addUrlReq(url,datetime,statuscode,errortext){
+  urlreqs.push(new pingreq(url,datetime,statuscode,errortext));
+}
+function saveUrlReqs() {
+  urlreqs = [];
+}
+function getUrlReqs()
+{
+  return urlreqs.length;
+}
+
+// Ping-related
+exports.fetchPingHosts = fetchPingHosts;
 exports.addPing = addPing;
 exports.savePings = savePings;
 exports.getPings = getPings;
+// HTTP-related
+exports.fetchUrlHosts = fetchUrlHosts;
+exports.addUrlReq = addUrlReq;
+exports.saveUrlReqs = saveUrlReqs;
+exports.getUrlReqs = getUrlReqs;
