@@ -1,5 +1,5 @@
 Common = {
-  datastore: require('./mysql/devnullstore.js')
+  datastore: require('./mysql/mysqlstore.js')
 };
 
 module.exports = Common;

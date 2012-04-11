@@ -4,6 +4,8 @@ var datastore = Common.datastore;
 
 var modulename = 'WEBUP';
 
+console.log("["+modulename+"] " + "Web request server activated...");
+
 var urls = datastore.fetchUrlHosts();
 
 function makehttprequest(host){
@@ -30,8 +32,9 @@ setInterval(function () {
 
 // Every 10 minutes throw the urlstats into our datastore!
 setInterval(function () {
+  console.log('Saving');
   datastore.saveUrlReqs();
-}, 1000*60*10);
+}, 1000*60*1);
   
 // Every 1 hour, re-fetch the hosts. Somebody could have added hosts to the db
 setInterval(function () {

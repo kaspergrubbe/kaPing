@@ -1,5 +1,9 @@
+var modulename = "DEVNULLSTORE";
+
 var pings   = [];
 var urlreqs = [];
+
+console.log("["+modulename+"] " + " Using devnullstore as datastore");
 
 // Ping-request
 function pingreq(siteurl,datetime,packets,received,loss,min,avg,max,mdev){

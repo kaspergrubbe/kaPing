@@ -4,7 +4,7 @@ var datastore = Common.datastore;
 
 var modulename = 'PING';
 
-console.log("["+modulename+"] " + "Connecting to datastore...");
+console.log("["+modulename+"] " + "Pingserver activated...");
 
 var servers = datastore.fetchPingHosts();
 
@@ -16,7 +16,7 @@ function ping(host,num){
 		var pingio_stats = stdout.match(/(\d+.\d+)\/(\d+.\d+)\/(\d+.\d+)\/(\d+.\d+)\sms/);
 
 		//console.log("Hit " + host + " with " + packets[1] + " packets " + (error ? "timeout" : ""));
-		if(error && pingio_stats !== null){
+		if(error && pingio_stats === null){
 			// If timeouts and not a single ping went through
 			datastore.addPing(host,new Date(),packets[1],received[1],packetloss[1],0,0,0,0);
 		}else{
@@ -38,7 +38,7 @@ setInterval(function () {
 	console.log("["+modulename+"] " + "pings:\t\t" + datastore.getPings());
 }, 1000*60*60);
 	
-// Every 10 minutes throw the pingstats into our datastore!
+// Every 10 minutes flush the pingstats into our datastore!
 setInterval(function () {
 	datastore.savePings();
 }, 1000*60*10);

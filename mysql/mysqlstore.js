@@ -12,6 +12,8 @@ var client = mysqlclient.createClient({
   database: mysql.mysqldb
 });
 
+console.log("["+modulename+"] " + " Using mysqlstore as datastore");
+
 // Ping-request
 function pingreq(siteurl,datetime,packets,received,loss,min,avg,max,mdev){
   this.siteurl=siteurl;
@@ -34,6 +36,7 @@ function urlreq(url,datetime,statuscode,errortext) {
 
 // -------------- PING RELATED
 function fetchPingHosts(){
+	var servers = [];
 	client.query(
 		'SELECT * FROM pinghosts',
 		function selectCb(err, results, fields) {
@@ -74,15 +77,36 @@ function getPings()
 
 // -------------- URL RELATED
 function fetchUrlHosts() {
-  // clear the array, we will fetch the new ones ourselves again
-  urls = ['http://woman.dk','http://THISADDRESSDOESNOTEXISTSATALLASKDAJSDAKJSD.com','http://woman.dk/deliberate404error'];
-  return urls;
+  var servers = [];
+	client.query(
+		'SELECT * FROM urlhosts',
+		function selectCb(err, results, fields) {
+		if (err) {
+			throw err;
+		}
+	
+		for(var i=0; i<results.length; i++) {
+			var value = results[i];
+			servers.push(value.url);
+		}
+		console.log("URLs re-loaded: " + servers);
+	}
+	);
+	return servers;
 }
 function addUrlReq(url,datetime,statuscode,errortext){
-  urlreqs.push(new pingreq(url,datetime,statuscode,errortext));
+  urlreqs.push(new urlreq(url,datetime,statuscode,errortext));
 }
 function saveUrlReqs() {
-  urlreqs = [];
+	for (var urlreq in urlreqs) {
+		var u = urlreqs[urlreq];
+		client.query(
+			'INSERT INTO urlrequests '+
+			'SET url = ?, datetime = ?, statuscode = ?, errortext = ?',
+			[u.url, u.datetime, u.statuscode, u.errortext]
+		);
+	}
+	urlreqs = [];
 }
 function getUrlReqs()
 {

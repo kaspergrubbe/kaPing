@@ -1,4 +1,4 @@
-var mysqlhost = 'rauw.dk',
+var mysqlhost = 'localhost',
 	mysqluser = 'root',
 	mysqlpass = '',
 	mysqldb   = 'kaping';
