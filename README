@@ -1,6 +1,20 @@
 This is a node.js project that pings different specified hosts, in an attempt to find out about host uptime and network over time
 
-This software will probably not work under other versions of "PING" as it relies to the error codes given by the Ubuntu version.
+This software will probably not work under other versions of "PING" as it relies to the error codes given by the Ubuntu version, a move to a more crossplatform approach is under way (regexes ftw!).
+
+Word-usage in this project:
+datastore: a place where data can be stored (filesystem, database etc.)
+teller: a service to report to when an error is seen (campfire, irc, msn, email, sms etc.)
+server: a module that makes some sort of request to a thirdparty (ping, httprequest etc.)
+config: a place where your configs are
+
+To use:
+- Set up MySQL, and create the tables (or test with the devnullstore if you don't have access to a database or are testing on a local machine)
+- Configure the needed configs
+- Set the things you want to use in common.js
+- Run kaping with 'node kaping.js'
+- ...
+- Profit!
 
 The MySQL tables are as follows:
 
