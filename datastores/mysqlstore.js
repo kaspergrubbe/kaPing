@@ -4,7 +4,7 @@ var modulename = 'MYSQLSTORE';
 var pings = [];
 var urlreqs = [];
 
-var mysql = require('./secret');
+var mysql = require('./../configs/mysql');
 var client = mysqlclient.createClient({
   host: mysql.mysqlhost,
   user: mysql.mysqluser,
@@ -27,11 +27,13 @@ function pingreq(siteurl,datetime,packets,received,loss,min,avg,max,mdev){
   this.mdev=mdev;
 }
 
-function urlreq(url,datetime,statuscode,errortext) {
+function urlreq(url,datetime,statuscode,timetaken,contenttype,errortext) {
   this.url=url;
   this.datetime=datetime;
   this.statuscode=statuscode;
+  this.timetaken=timetaken;
   this.errortext=errortext;
+  this.contenttype=contenttype;
 }
 
 // -------------- PING RELATED
@@ -94,16 +96,16 @@ function fetchUrlHosts() {
 	);
 	return servers;
 }
-function addUrlReq(url,datetime,statuscode,errortext){
-  urlreqs.push(new urlreq(url,datetime,statuscode,errortext));
+function addUrlReq(url,datetime,statuscode,timetaken,contenttype,errortext){
+  urlreqs.push(new urlreq(url,datetime,statuscode,timetaken,contenttype,errortext));
 }
 function saveUrlReqs() {
 	for (var urlreq in urlreqs) {
 		var u = urlreqs[urlreq];
 		client.query(
 			'INSERT INTO urlrequests '+
-			'SET url = ?, datetime = ?, statuscode = ?, errortext = ?',
-			[u.url, u.datetime, u.statuscode, u.errortext]
+			'SET url = ?, datetime = ?, statuscode = ?, timetaken = ?, contenttype = ?, errortext = ?',
+			[u.url, u.datetime, u.statuscode, u.timetaken, u.contenttype, u.errortext]
 		);
 	}
 	urlreqs = [];

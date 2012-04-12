@@ -31,11 +31,13 @@ CREATE TABLE IF NOT EXISTS `urlhosts` (
 CREATE TABLE IF NOT EXISTS `urlrequests` (
   `url` varchar(255) NOT NULL,
   `datetime` datetime NOT NULL,
-  `statuscode` int(11) NOT NULL,
+  `statuscode` int(3) NOT NULL,
+  `timetaken` double(5,4) NOT NULL,
+  `contenttype` varchar(255) NOT NULL,
   `errortext` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-TODO: Should add a indexes and relations 
+TODO: Should add a indexes and relations + auto-increment
 
 == Testing Ping return ==
 

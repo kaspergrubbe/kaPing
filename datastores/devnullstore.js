@@ -18,10 +18,12 @@ function pingreq(siteurl,datetime,packets,received,loss,min,avg,max,mdev){
   this.mdev=mdev;
 }
 
-function urlreq(url,datetime,statuscode,errortext) {
-  this.url=siteurl;
+function urlreq(url,datetime,statuscode,timetaken,contenttype,errortext) {
+  this.url=url;
   this.datetime=datetime;
   this.statuscode=statuscode;
+  this.timetaken=timetaken;
+  this.contenttype=contenttype;
   this.errortext=errortext;
 }
 
@@ -37,8 +39,8 @@ function fetchUrlHosts() {
   return servers;
 }
 
-function addUrlReq(url,datetime,statuscode,errortext){
-  urlreqs.push(new pingreq(url,datetime,statuscode,errortext));
+function addUrlReq(url,datetime,statuscode,timetaken,contenttype,errortext){
+  urlreqs.push(new urlreq(url,datetime,statuscode,timetaken,contenttype,errortext));
 }
 
 function addPing(siteurl,datetime,packets,received,loss,min,avg,max,mdev){

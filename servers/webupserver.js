@@ -1,6 +1,7 @@
 var cp = require('child_process');
 var Common = require('./../common.js');
 var datastore = Common.datastore;
+var teller = Common.teller;
 
 var modulename = 'WEBUP';
 
@@ -9,16 +10,24 @@ console.log("["+modulename+"] " + "Web request server activated...");
 var urls = datastore.fetchUrlHosts();
 
 function makehttprequest(host){
-  cp.exec("curl --user-agent 'kaPingBot' -I "+host, function (error, stdout, stderr){
+  cp.exec("curl --user-agent 'kaPingBot' -I -w 'time_total:%{time_total}\nhttp_code:%{http_code}\ncontent_type:%{content_type}\n' "+host, function (error, stdout, stderr){
     // error is null if no errors exists
+    var timetaken    = stdout.match(/time_total:(\S+)/),
+        http_code    = stdout.match(/http_code:(\S+)/),
+        content_type = stdout.match(/content_type:(.+)/);
+    
+    if(http_code[1]!=='200' && http_code[1]!=='301' && http_code[1]!=='302' && http_code[1]!=='000')
+    {
+      teller.addWarning(host,"Error occoured: "+http_code[1]+" @ "+host);
+    }
+
     if(error === null)
     {
-      var errorcode = stdout.match(/\w+\/\d+.\d+ (\d+)/);
-      datastore.addUrlReq(host,new Date(),errorcode[1],'');
+      datastore.addUrlReq(host,new Date(),http_code[1],timetaken[1],content_type[1],'');
     }
     else
     {
-      datastore.addUrlReq(host,new Date(),0,stderr);
+      datastore.addUrlReq(host,new Date(),0,timetaken[1],'',stderr);
     }
   });
 }
@@ -34,7 +43,7 @@ setInterval(function () {
 setInterval(function () {
   console.log('Saving');
   datastore.saveUrlReqs();
-}, 1000*60*1);
+}, 1000*60*10);
   
 // Every 1 hour, re-fetch the hosts. Somebody could have added hosts to the db
 setInterval(function () {

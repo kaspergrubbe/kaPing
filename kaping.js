@@ -1,2 +1,2 @@
-//require('./servers/pingserver');
+require('./servers/pingserver');
 require('./servers/webupserver');
